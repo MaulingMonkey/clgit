@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name":                     "example: dump",
+            "type":                     "cppvsdbg",
+            "request":                  "launch",
+            "internalConsoleOptions":   "openOnSessionStart",
+            "enableDebugHeap":          true,
+            "preLaunchTask":            "cargo +1.32.0 build --frozen --example dump",
+            "program":                  "${workspaceFolder}/target/debug/examples/dump.exe",
+            "cwd":                      "${workspaceFolder}",
+            "environment": [
+                { "name": "RUST_BACKTRACE", "value": "1" },
+            ],
+        },
+    ]
+}

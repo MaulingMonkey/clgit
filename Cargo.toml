@@ -1,0 +1,28 @@
+# https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[package]
+name                                    = "clgit"
+version                                 = "0.0.0-git"
+authors                                 = ["MaulingMonkey <git@maulingmonkey.com>"]
+repository                              = "https://github.com/MaulingMonkey/clgit.git"
+documentation                           = "https://docs.rs/clgit/"
+edition                                 = "2018"
+license                                 = "Apache-2.0 OR MIT"
+readme                                  = "Readme.md"
+description                             = "Command Line GIT wrappers"
+keywords                                = ["git"]
+categories                              = ["filesystem"]
+exclude = [
+    ".vscode/*",
+    "build.rs",     # just use docs.rs
+]
+
+[lib]
+path                                    = "src/_clgit.rs"
+
+[badges]
+travis-ci                               = { repository = "MaulingMonkey/clgit", branch = "master" }
+
+[package.metadata.docs.rs]
+all-features = true
+rustc-args = ["--cfg", "external_doc"]
