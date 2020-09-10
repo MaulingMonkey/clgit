@@ -6,7 +6,7 @@
 mod branch;             pub         use branch::*;
 mod cat_file_reader;    pub(crate)  use cat_file_reader::*;
 mod commit;             pub         use commit::*;
-mod file_type;          pub(crate)  use file_type::*;
+mod file_type;          pub         use file_type::*;
 mod hash;               pub         use hash::*;
 mod name;               pub         use name::*;
 mod repository;         pub         use repository::*;

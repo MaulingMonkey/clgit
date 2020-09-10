@@ -1,15 +1,22 @@
 use std::fmt::{self, Debug, Display, Formatter};
 
+/// The type of some git content ("blob", "commit", or "tree")
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum FileType {
+    /// A Blob.
     Blob,
+
+    /// A [Commit](crate::Commit).
     Commit,
+
+    /// A [Tree](crate::Tree).
     Tree,
 
     #[doc(hidden)] _Unknown(String),
 }
 
 impl FileType {
+    /// Return the git-style string for the given file type (e.g. "blob", "commit", or "tree")
     pub fn as_str(&self) -> &str {
         match self {
             FileType::Blob          => "blob",
