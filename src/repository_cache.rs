@@ -9,7 +9,9 @@ use std::sync::Arc;
 
 /// A git [Repository] + in-memory caches for [Commit]s, [Tree]s, and possibly Blobs
 pub struct RepositoryCache {
-    pub(crate) repository: Repository,
+    /// The [Repository] this cache reads from
+    pub         repository: Repository,
+
     commits:    SharedHashMap<Commit, Arc<Commit>>,
     trees:      SharedHashMap<Tree,   Arc<Tree>  >,
 }
