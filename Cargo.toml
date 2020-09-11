@@ -2,7 +2,7 @@
 
 [package]
 name                                    = "clgit"
-version                                 = "0.0.0-git"
+version                                 = "0.1.0"
 authors                                 = ["MaulingMonkey <git@maulingmonkey.com>"]
 repository                              = "https://github.com/MaulingMonkey/clgit.git"
 documentation                           = "https://docs.rs/clgit/"
