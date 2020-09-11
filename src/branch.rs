@@ -52,7 +52,7 @@ impl Debug for BranchRef<'_> {
 
 
 
-pub(crate) fn gather_branches<T>(parent_name: &OsStr, parent_path: &Path, branches: &mut BTreeMap<OsString, crate::Hash<T>>) -> io::Result<()> {
+pub(crate) fn gather_branches<T>(parent_name: &OsStr, parent_path: &Path, branches: &mut BTreeMap<OsString, generic::Hash<T>>) -> io::Result<()> {
     let dir = match parent_path.read_dir() {
         Ok(dir)     => dir,
         Err(ref e)  if e.kind() == io::ErrorKind::NotFound && parent_name.is_empty() => return Ok(()),
@@ -72,7 +72,7 @@ pub(crate) fn gather_branches<T>(parent_name: &OsStr, parent_path: &Path, branch
         if meta.is_dir() {
             gather_branches(&name, &full_path, branches)?;
         } else if meta.is_file() {
-            branches.insert(name, Hash::from_str(std::fs::read_to_string(&full_path)?.trim())?);
+            branches.insert(name, generic::Hash::from_str(std::fs::read_to_string(&full_path)?.trim())?);
         }
     }
     Ok(())

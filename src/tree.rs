@@ -10,8 +10,8 @@ use std::str::FromStr;
 
 
 
-/// A [Hash](crate::Hash) referencing a [Tree]
-pub type Hash = crate::Hash<Tree>;
+/// A [Hash](generic::Hash) referencing a [Tree]
+pub type Hash = generic::Hash<Tree>;
 
 /// A parsed git tree (~directory)
 /// 
@@ -66,7 +66,7 @@ impl Tree {
             if name.pop() != Some(b'\0') { return Err(io::Error::new(io::ErrorKind::InvalidData, "file name not nul terminated in tree")); }
             let name = Name::from(name);
 
-            let hash = crate::Hash::read_sha1(&mut reader)?;
+            let hash = unknown::Hash::read_sha1(&mut reader)?;
 
             out.entries.insert(name.clone(), Entry {
                 permissions,
@@ -81,14 +81,14 @@ impl Tree {
 
 
 
-/// A [Tree] entry (e.g. { [Permissions], [Hash](crate::Hash), [Name], .. })
+/// A [Tree] entry (e.g. { [Permissions], [Hash](unknown::Hash), [Name], .. })
 #[derive(Debug)]
 pub struct Entry {
     /// [Permissions] for a given file or directory (typically "100644" for files or "040000" for trees)
     pub permissions:    Permissions,
 
-    /// A [Hash](crate::Hash) referencing the contents of [Tree] or Blob
-    pub hash:           crate::Hash<()>,
+    /// A [Hash](unknown::Hash) referencing the contents of [Tree] or Blob
+    pub hash:           unknown::Hash,
 
     /// A [Name] describing this [Tree] or Blob (e.g. ".gitignore", ".vscode", ...)
     pub name:           Name,

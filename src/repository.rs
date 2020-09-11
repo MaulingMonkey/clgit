@@ -116,7 +116,7 @@ impl Repository {
     }
 
     /// Run/parse `git cat-file -t [hash]`
-    pub fn cat_file_type(&self, hash: &crate::Hash<()>) -> io::Result<FileType> {
+    pub fn cat_file_type(&self, hash: &unknown::Hash) -> io::Result<FileType> {
         let hash = HashTempStr::new(hash);
         let git = self.git().args(&["cat-file", "-t", hash.as_str()]).output()?;
         match git.status.code() {
@@ -142,7 +142,7 @@ impl Repository {
         c
     }
 
-    fn cat_file<T>(&self, ty: &str, hash: &crate::Hash<T>) -> io::Result<impl Read> {
+    fn cat_file<T>(&self, ty: &str, hash: &generic::Hash<T>) -> io::Result<impl Read> {
         let hash = HashTempStr::new(hash);
         let mut git = self.git()
             .args(&["cat-file", ty, hash.as_str()])

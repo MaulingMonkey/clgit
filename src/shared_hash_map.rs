@@ -1,6 +1,6 @@
 #![allow(dead_code)] // XXX
 
-use crate::Hash;
+use crate::generic::Hash;
 
 use std::sync::Mutex;
 use std::collections::HashMap;

@@ -8,12 +8,15 @@ mod branch;             pub         use branch::*;
 mod cat_file_reader;    pub(crate)  use cat_file_reader::*;
 pub mod commit;         pub         use commit::Commit;
 mod file_type;          pub         use file_type::*;
-mod hash;               pub         use hash::*;
+pub mod generic;        pub         use generic::HashParseError; pub(crate) use generic::HashTempStr;
 mod name;               pub         use name::*;
 mod repository;         pub         use repository::*;
 mod repository_cache;   pub         use repository_cache::*;
 mod shared_hash_map;    pub(crate)  use shared_hash_map::*;
 pub mod tree;           pub         use tree::Tree;
+pub mod unknown;
+
+
 
 #[cfg(test)] mod tests {
     use super::*;

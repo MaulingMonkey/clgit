@@ -1,3 +1,5 @@
+//! [Hash](generic::Hash), [HashParseError]
+
 use crate::*;
 
 use std::convert::*;
@@ -18,11 +20,12 @@ pub struct Hash<T> {
 }
 
 impl<T> Hash<T> {
-    /// Construct a [Hash] from a hexidecimal string.  The entire hash must be specified: 40 characters ([SHA-1]) or 64 ([SHA-256])
+    /// Construct a [Hash](generic::Hash) from a hexidecimal string.  The entire hash must be specified: 40 characters ([SHA-1]) or 64 ([SHA-256])
     ///
     /// # Examples
     /// ```rust
-    /// # use clgit::Hash;
+    /// use clgit::unknown::Hash; // aka clgit::generic::Hash<()>
+    /// 
     /// for good in [
     ///     // Legal SHA-1 hashes (20 bytes / 40 characters)
     ///     "74da26a93c3eac22884a62bd8d70aab3434c9174",
@@ -37,7 +40,7 @@ impl<T> Hash<T> {
     ///     // SHA-256 hashes (40 bytes / 64 characters)
     ///     "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
     /// ].iter().cloned() {
-    ///     Hash::<()>::from_str(good).unwrap_or_else(|e| panic!("Failed to parse {}: {}", good, e));
+    ///     Hash::from_str(good).unwrap_or_else(|e| panic!("Failed to parse {}: {}", good, e));
     /// }
     ///
     /// for bad in [
@@ -47,11 +50,9 @@ impl<T> Hash<T> {
     ///     "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcde",   // too short
     ///     "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0", // too long
     /// ].iter().cloned() {
-    ///     assert!(Hash::<()>::from_str(bad).is_err(), "Didn't expect to parse {}", bad);
+    ///     assert!(Hash::from_str(bad).is_err(), "Didn't expect to parse {}", bad);
     /// }
     /// ```
-    ///
-    /// [Hash]:     crate::Hash
     ///
     /// [SHA-1]:    https://en.wikipedia.org/wiki/SHA-1
     /// [SHA-256]:  https://en.wikipedia.org/wiki/SHA-2
@@ -76,21 +77,19 @@ impl<T> Hash<T> {
         Ok(Self { bytes, len: len as u8, _pd: PhantomData })
     }
 
-    /// Construct a [Hash] from a slice of bytes.  The entire hash must be specified: 20 bytes ([SHA-1]) or 32 ([SHA-256])
+    /// Construct a [Hash](generic::Hash) from a slice of bytes.  The entire hash must be specified: 20 bytes ([SHA-1]) or 32 ([SHA-256])
     ///
     /// # Examples
     /// ```rust
-    /// # use clgit::Hash;
-    /// Hash::<()>::from_bytes(&[0u8; 20][..]).expect("20 bytes OK");
-    /// Hash::<()>::from_bytes(&[0u8; 32][..]).expect("32 bytes OK");
+    /// # use clgit::unknown::Hash;
+    /// Hash::from_bytes(&[0u8; 20][..]).expect("20 bytes OK");
+    /// Hash::from_bytes(&[0u8; 32][..]).expect("32 bytes OK");
     /// 
-    /// Hash::<()>::from_bytes(&[0u8; 19][..]).expect_err("19 bytes invalid");
-    /// Hash::<()>::from_bytes(&[0u8; 21][..]).expect_err("21 bytes invalid");
-    /// Hash::<()>::from_bytes(&[0u8; 31][..]).expect_err("31 bytes invalid");
-    /// Hash::<()>::from_bytes(&[0u8; 33][..]).expect_err("33 bytes invalid");
+    /// Hash::from_bytes(&[0u8; 19][..]).expect_err("19 bytes invalid");
+    /// Hash::from_bytes(&[0u8; 21][..]).expect_err("21 bytes invalid");
+    /// Hash::from_bytes(&[0u8; 31][..]).expect_err("31 bytes invalid");
+    /// Hash::from_bytes(&[0u8; 33][..]).expect_err("33 bytes invalid");
     /// ```
-    ///
-    /// [Hash]:     crate::Hash
     ///
     /// [SHA-1]:    https://en.wikipedia.org/wiki/SHA-1
     /// [SHA-256]:  https://en.wikipedia.org/wiki/SHA-2
@@ -104,13 +103,13 @@ impl<T> Hash<T> {
         Ok(Self { bytes, len: len as u8, _pd: PhantomData })
     }
 
-    /// [Read] 20 bytes from `r` and treat it as a [SHA-1] hash
+    /// [Read] 20 bytes from `r` and treat it as a [SHA-1] [Hash](generic::Hash)
     /// 
     /// # Example
     /// ```rust
-    /// # use clgit::Hash;
+    /// # use clgit::unknown::Hash;
     /// let mut io = std::io::Cursor::new(vec![0; 128]);
-    /// Hash::<()>::read_sha1(&mut io).unwrap();
+    /// Hash::read_sha1(&mut io).unwrap();
     /// ```
     ///
     /// [SHA-1]:    https://en.wikipedia.org/wiki/SHA-1
@@ -120,13 +119,13 @@ impl<T> Hash<T> {
         Ok(Self { bytes, len: 20, _pd: PhantomData })
     }
 
-    /// [Read] 32 bytes from `r` and treat it as a [SHA-256] hash
+    /// [Read] 32 bytes from `r` and treat it as a [SHA-256] [Hash](generic::Hash)
     /// 
     /// # Example
     /// ```rust
-    /// # use clgit::Hash;
+    /// # use clgit::unknown::Hash;
     /// let mut io = std::io::Cursor::new(vec![0; 128]);
-    /// Hash::<()>::read_sha256(&mut io).unwrap();
+    /// Hash::read_sha256(&mut io).unwrap();
     /// ```
     ///
     /// [SHA-256]:  https://en.wikipedia.org/wiki/SHA-2
@@ -140,8 +139,8 @@ impl<T> Hash<T> {
     /// 
     /// # Example
     /// ```rust
-    /// # use clgit::Hash;
-    /// # let hash = Hash::<()>::default();
+    /// # use clgit::unknown::Hash;
+    /// # let hash = Hash::default();
     /// assert!(hash.len() == 20 || hash.len() == 32);
     /// ```
     pub fn len(&self) -> usize { usize::from(self.len) }
@@ -150,8 +149,8 @@ impl<T> Hash<T> {
     /// 
     /// # Example
     /// ```rust
-    /// # use clgit::Hash;
-    /// # let hash = Hash::<()>::default();
+    /// # use clgit::unknown::Hash;
+    /// # let hash = Hash::default();
     /// let bytes : &[u8] = hash.bytes();
     /// assert!(bytes.len() == 20 || bytes.len() == 32);
     /// ```
@@ -161,11 +160,31 @@ impl<T> Hash<T> {
     /// 
     /// # Example
     /// ```rust
-    /// # use clgit::Hash;
-    /// # let hash = Hash::<()>::default();
+    /// # use clgit::unknown::Hash;
+    /// # let hash = Hash::default();
     /// println!("byte: {:02x}", hash.first_byte());
     /// ```
     pub fn first_byte(&self) -> u8 { self.bytes[0] }
+
+    /// Discard type information for this hash
+    pub fn typeless(&self) -> Hash<()> {
+        Hash {
+            bytes:  self.bytes.clone(),
+            len:    self.len,
+            _pd:    PhantomData,
+        }
+    }
+}
+
+impl Hash<()> {
+    /// Acquire type information for this hash
+    pub fn cast<T>(&self) -> Hash<T> {
+        Hash {
+            bytes:  self.bytes.clone(),
+            len:    self.len,
+            _pd:    PhantomData,
+        }
+    }
 }
 
 impl<T> Clone for Hash<T> {
@@ -219,21 +238,14 @@ impl PartialEq<Hash<Tree  >> for Hash<()> { fn eq(&self, other: &Hash<Tree  >) -
 
 
 
-/// Describes how a [Hash] failed to [parse].
+/// Describes how a [Hash](generic::Hash) failed to [parse](str::parse).
 /// Convertable to [std::io::Error], [Box]&lt;dyn [std::error::Error]&gt;.
-///
-/// [Hash]:         crate::Hash
-/// [parse]:        str::parse
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum HashParseError {
-    /// [Hash] wasn't an expected length (20/32 bytes, or 40/64 characters)
-    ///
-    /// [Hash]:         crate::Hash
+    /// [Hash](generic::Hash) wasn't an expected length (20/32 bytes, or 40/64 characters)
     LengthMismatch,
 
-    /// [Hash] contained an invalid character (expected [hexadecimal](https://simple.wikipedia.org/wiki/Hexadecimal) characters only)
-    ///
-    /// [Hash]:         crate::Hash
+    /// [Hash](generic::Hash) contained an invalid character (expected [hexadecimal](https://simple.wikipedia.org/wiki/Hexadecimal) characters only)
     BadCharacter(char),
 }
 

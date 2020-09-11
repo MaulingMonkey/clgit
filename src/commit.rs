@@ -6,8 +6,8 @@ use std::io::{self, BufRead, BufReader};
 
 
 
-/// A [Hash](crate::Hash) referencing a [Commit]
-pub type Hash = crate::Hash<Commit>;
+/// A [Hash](generic::Hash) referencing a [Commit]
+pub type Hash = generic::Hash<Commit>;
 
 /// A parsed git commit
 /// 
