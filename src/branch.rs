@@ -72,7 +72,13 @@ pub(crate) fn gather_branches<T>(parent_name: &OsStr, parent_path: &Path, branch
         if meta.is_dir() {
             gather_branches(&name, &full_path, branches)?;
         } else if meta.is_file() {
-            branches.insert(name, generic::Hash::from_str(std::fs::read_to_string(&full_path)?.trim())?);
+            let blob = std::fs::read_to_string(&full_path)?;
+
+            // Don't choke on e.g. refs/remotes/origin/HEAD:
+            // "ref: refs/remotes/origin/master\n"
+            if blob.starts_with("ref: ") { continue; }
+
+            branches.insert(name, generic::Hash::from_str(blob.trim())?);
         }
     }
     Ok(())
