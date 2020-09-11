@@ -6,6 +6,7 @@ use std::convert::*;
 use std::fmt::{self, Debug, Display, Formatter};
 use std::io::{self, Read};
 use std::marker::PhantomData;
+use std::str::FromStr;
 
 
 
@@ -227,6 +228,7 @@ impl<T> Eq for Hash<T> {}
 impl<T> PartialOrd<Self> for Hash<T> { fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> { self.bytes().partial_cmp(other.bytes()) } }
 impl<T> Ord for Hash<T> { fn cmp(&self, other: &Self) -> std::cmp::Ordering { self.bytes().cmp(other.bytes()) } }
 impl<T> std::hash::Hash for Hash<T> { fn hash<H: std::hash::Hasher>(&self, state: &mut H) { self.bytes().hash(state) } }
+impl<T> FromStr for Hash<T> { fn from_str(s: &str) -> Result<Self, HashParseError> { Self::from_str(s) } type Err = HashParseError; }
 
 impl PartialEq<Hash<()>> for Hash<Blob  > { fn eq(&self, other: &Hash<()>) -> bool { self.bytes() == other.bytes() } }
 impl PartialEq<Hash<()>> for Hash<Commit> { fn eq(&self, other: &Hash<()>) -> bool { self.bytes() == other.bytes() } }
