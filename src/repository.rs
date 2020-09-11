@@ -1,11 +1,11 @@
-use crate::{Branch, CatFileReader, FileType, Hash, HashTempStr, gather_branches};
+use crate::*;
 
 use std::fmt::{self, Debug, Formatter};
 use std::ffi::OsStr;
 use std::io::{self, Read};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
-use std::sync::{Arc};
+use std::sync::Arc;
 
 
 
@@ -99,7 +99,7 @@ impl Repository {
     }
 
     /// Run/parse `git cat-file -s [hash]`
-    pub fn cat_file_size(&self, hash: &Hash) -> io::Result<u64> {
+    pub fn cat_file_size(&self, hash: &blob::Hash) -> io::Result<u64> {
         let hash = HashTempStr::new(hash);
         let git = self.git().args(&["cat-file", "-s", hash.as_str()]).output()?;
         match git.status.code() {
@@ -116,7 +116,7 @@ impl Repository {
     }
 
     /// Run/parse `git cat-file -t [hash]`
-    pub fn cat_file_type(&self, hash: &Hash) -> io::Result<FileType> {
+    pub fn cat_file_type(&self, hash: &crate::Hash<()>) -> io::Result<FileType> {
         let hash = HashTempStr::new(hash);
         let git = self.git().args(&["cat-file", "-t", hash.as_str()]).output()?;
         match git.status.code() {
@@ -128,13 +128,13 @@ impl Repository {
     }
 
     /// Run/parse `git cat-file commit [hash]`
-    pub fn cat_file_commit  (&self, hash: &Hash) -> io::Result<impl Read> { self.cat_file("commit", hash) }
+    pub fn cat_file_commit  (&self, hash: &commit::Hash) -> io::Result<impl Read> { self.cat_file("commit", hash) }
 
     /// Run/parse `git cat-file tree [hash]`
-    pub fn cat_file_tree    (&self, hash: &Hash) -> io::Result<impl Read> { self.cat_file("tree",   hash) }
+    pub fn cat_file_tree    (&self, hash: &tree::Hash) -> io::Result<impl Read> { self.cat_file("tree", hash) }
 
     /// Run/parse `git cat-file blob [hash]`
-    pub fn cat_file_blob    (&self, hash: &Hash) -> io::Result<impl Read> { self.cat_file("blob",   hash) }
+    pub fn cat_file_blob    (&self, hash: &blob::Hash) -> io::Result<impl Read> { self.cat_file("blob", hash) }
 
     fn git(&self) -> Command {
         let mut c = Command::new("git");
@@ -142,7 +142,7 @@ impl Repository {
         c
     }
 
-    fn cat_file(&self, ty: &str, hash: &Hash) -> io::Result<impl Read> {
+    fn cat_file<T>(&self, ty: &str, hash: &crate::Hash<T>) -> io::Result<impl Read> {
         let hash = HashTempStr::new(hash);
         let mut git = self.git()
             .args(&["cat-file", ty, hash.as_str()])

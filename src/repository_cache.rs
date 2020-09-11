@@ -1,4 +1,4 @@
-use crate::{Commit, Hash, Tree, Repository, SharedHashMap};
+use crate::*;
 
 use std::convert::*;
 use std::io;
@@ -10,8 +10,8 @@ use std::sync::Arc;
 /// A git [Repository] + in-memory caches for [Commit]s, [Tree]s, and possibly Blobs
 pub struct RepositoryCache {
     pub(crate) repository: Repository,
-    commits:    SharedHashMap<Arc<Commit>>,
-    trees:      SharedHashMap<Arc<Tree>>,
+    commits:    SharedHashMap<Commit, Arc<Commit>>,
+    trees:      SharedHashMap<Tree,   Arc<Tree>  >,
 }
 
 impl RepositoryCache {
@@ -24,10 +24,8 @@ impl RepositoryCache {
         }
     }
 
-    /// Attempt to read a [Commit] by it's given [Hash]
-    ///
-    /// [Hash]:     crate::Hash
-    pub fn commit(&self, hash: &Hash) -> io::Result<Arc<Commit>> {
+    /// Attempt to read a [Commit] by it's given [Hash](commit::Hash)
+    pub fn commit(&self, hash: &commit::Hash) -> io::Result<Arc<Commit>> {
         if let Some(commit) = self.commits.get_clone(hash) {
             return Ok(commit);
         }
@@ -42,10 +40,8 @@ impl RepositoryCache {
         }
     }
 
-    /// Attempt to read a [Tree] by it's given [Hash]
-    ///
-    /// [Hash]:     crate::Hash
-    pub fn tree(&self, hash: &Hash) -> io::Result<Arc<Tree>> {
+    /// Attempt to read a [Tree] by it's given [Hash](tree::Hash)
+    pub fn tree(&self, hash: &tree::Hash) -> io::Result<Arc<Tree>> {
         if let Some(tree) = self.trees.get_clone(hash) {
             return Ok(tree);
         }

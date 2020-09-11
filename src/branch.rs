@@ -1,4 +1,4 @@
-use crate::Hash;
+use crate::*;
 
 use std::collections::*;
 use std::fmt::{self, Debug, Formatter};
@@ -11,18 +11,15 @@ use std::path::Path;
 /// A named reference to a commit (e.g. "master" => "074d881e29cc3bff82da905adcde2aea7cb5b165")
 pub struct Branch {
     pub(crate) name:    OsString,
-    pub(crate) commit:  Hash
+    pub(crate) commit:  commit::Hash
 }
 
 impl Branch {
     /// Name of the branch (e.g. "master")
     pub fn name(&self) -> &OsStr { &self.name }
 
-    /// [Hash] of the [Commit] this branch points to (e.g. "074d881e29cc3bff82da905adcde2aea7cb5b165")
-    ///
-    /// [Commit]:   crate::Commit
-    /// [Hash]:     crate::Hash
-    pub fn commit(&self) -> &Hash { &self.commit }
+    /// [Hash](commit::Hash) of the [Commit] this branch points to (e.g. "074d881e29cc3bff82da905adcde2aea7cb5b165")
+    pub fn commit(&self) -> &commit::Hash { &self.commit }
 }
 
 impl Debug for Branch {
@@ -36,7 +33,7 @@ impl Debug for Branch {
 /// A named reference to a commit (e.g. "master" => "074d881e29cc3bff82da905adcde2aea7cb5b165") w/o deep copies
 pub struct BranchRef<'r> {
     pub(crate) name:    &'r OsString,
-    pub(crate) commit:  &'r Hash
+    pub(crate) commit:  &'r commit::Hash
 }
 
 impl BranchRef<'_> {
@@ -44,7 +41,7 @@ impl BranchRef<'_> {
     pub fn name(&self) -> &OsStr { &self.name }
 
     /// Hash of the commit this branch points to (e.g. "074d881e29cc3bff82da905adcde2aea7cb5b165")
-    pub fn commit(&self) -> &Hash { &self.commit }
+    pub fn commit(&self) -> &commit::Hash { &self.commit }
 }
 
 impl Debug for BranchRef<'_> {
@@ -55,7 +52,7 @@ impl Debug for BranchRef<'_> {
 
 
 
-pub(crate) fn gather_branches(parent_name: &OsStr, parent_path: &Path, branches: &mut BTreeMap<OsString, Hash>) -> io::Result<()> {
+pub(crate) fn gather_branches<T>(parent_name: &OsStr, parent_path: &Path, branches: &mut BTreeMap<OsString, crate::Hash<T>>) -> io::Result<()> {
     let dir = match parent_path.read_dir() {
         Ok(dir)     => dir,
         Err(ref e)  if e.kind() == io::ErrorKind::NotFound && parent_name.is_empty() => return Ok(()),

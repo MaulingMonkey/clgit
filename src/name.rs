@@ -15,7 +15,7 @@ impl Name {
 
     /// Get this [Name] as a UTF8 string.  Use [as_str_lossy] if you don't care about preserving non-UTF8 byte sequences.
     ///
-    /// [as_str_lossy]:     crate::Name::as_str_lossy
+    /// [as_str_lossy]:     Self::as_str_lossy
     pub fn as_str(&self) -> Option<&str> {
         match &self.0 {
             Int::UTF8(s)        => Some(s.as_str()),

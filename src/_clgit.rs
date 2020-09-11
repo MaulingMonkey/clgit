@@ -3,16 +3,17 @@
 #![cfg_attr(external_doc, warn(missing_docs))]
 #![forbid(unsafe_code)]
 
+pub mod blob;           pub(crate)  use blob::Blob;
 mod branch;             pub         use branch::*;
 mod cat_file_reader;    pub(crate)  use cat_file_reader::*;
-mod commit;             pub         use commit::*;
+pub mod commit;         pub         use commit::Commit;
 mod file_type;          pub         use file_type::*;
 mod hash;               pub         use hash::*;
 mod name;               pub         use name::*;
 mod repository;         pub         use repository::*;
 mod repository_cache;   pub         use repository_cache::*;
 mod shared_hash_map;    pub(crate)  use shared_hash_map::*;
-mod tree;               pub         use tree::*;
+pub mod tree;           pub         use tree::Tree;
 
 #[cfg(test)] mod tests {
     use super::*;
